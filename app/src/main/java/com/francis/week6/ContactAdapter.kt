@@ -1,6 +1,5 @@
 package com.francis.week6
 
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -31,21 +30,22 @@ class ContactAdapter(
          * @param contact contact entry to populate the recycler view with.
          */
         fun bind(contact: Contact) {
-            this.contact = contact
+            val newContact = Validator.setContactName(contact)
+            this.contact = newContact
 
             //Initialize circular card view and set the color
             itemView.findViewById<CardView>(R.id.cardView).apply {
-                setCardBackgroundColor(contact.color)
+                setCardBackgroundColor(newContact.color)
             }
 
             //Initialize initials textview and set text
             itemView.findViewById<TextView>(R.id.initials_text_view).also {
-                it.text = contact.fullName?.first()?.toUpperCase().toString()
+                it.text = newContact.fullName?.first()?.toUpperCase().toString()
             }
 
             //Initialize full name text view and set text
             itemView.findViewById<TextView>(R.id.name_text_view).also {
-                it.text = contact.fullName
+                it.text = newContact.fullName
             }
         }
     }

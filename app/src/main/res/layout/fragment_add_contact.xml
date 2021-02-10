@@ -75,6 +75,7 @@
                         android:id="@+id/name_edit_text"
                         style="@style/MyTextInputEditText"
                         android:layout_width="match_parent"
+                        android:inputType="text"
                         android:layout_height="wrap_content"
                         android:hint="Name" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -123,6 +124,7 @@
                         style="@style/MyTextInputEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:inputType="phone"
                         android:hint="Phone" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -153,6 +155,7 @@
                         style="@style/MyTextInputEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
                         android:hint="Email" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>

@@ -45,8 +45,9 @@ class ContactDetailsFragment : Fragment() {
             R.id.action_share -> {
                 //Create a share intent for the contact.
                 val intent = Intent(Intent.ACTION_SEND)
-                intent.putExtra(Intent.EXTRA_TEXT, contact.phone)
-                startActivity(Intent.createChooser(intent, "Share contact"))
+                intent.putExtra(Intent.EXTRA_TEXT, "${contact.phone}")
+                intent.type = "text/plain"
+                startActivity(Intent.createChooser(intent, "Share this contact using:"))
             }
             R.id.action_delete -> {
                 //Show alert dialog to confirm delete before deletion.
@@ -214,6 +215,7 @@ class ContactDetailsFragment : Fragment() {
         }
 
         ContactStore.contact.observe(viewLifecycleOwner, {contact ->
+
             if (this.contact == contact) {
                 toolBar.title = contact.fullName
                 initialsTextView.text = contact.fullName?.trim()?.toUpperCase()?.first().toString()

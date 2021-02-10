@@ -63,6 +63,12 @@ class AddContactFragment : Fragment() {
                     )
                 }
 
+                // If all edit text are empty close fragment without adding to firebase
+                if (Validator.editTextValidate(name, phone, email)){
+                    view?.findNavController()?.popBackStack()
+                    return false
+                }
+
                 if (action == "Add") {
                     ContactStore.addContact(contact) //Add a contact entry to firebase database.
                 }else {
