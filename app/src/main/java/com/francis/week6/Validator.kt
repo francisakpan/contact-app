@@ -1,5 +1,6 @@
 package com.francis.week6
 
+import android.util.Patterns
 import android.view.View
 import com.francis.week6.models.Contact
 import com.google.android.material.textfield.TextInputEditText
@@ -23,5 +24,8 @@ class Validator {
 
             return contact
         }
+
+        fun String.isValidEmail() =
+            !isNullOrEmpty() && Patterns.EMAIL_ADDRESS.matcher(this).matches()
     }
 }

@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import com.francis.week6.Validator.Companion.isValidEmail
 import com.francis.week6.models.Contact
 import com.francis.week6.models.ContactStore
 import com.google.android.material.textfield.TextInputEditText
@@ -66,6 +67,12 @@ class AddContactFragment : Fragment() {
                 // If all edit text are empty close fragment without adding to firebase
                 if (Validator.editTextValidate(name, phone, email)){
                     view?.findNavController()?.popBackStack()
+                    return false
+                }
+
+                //Check if a valid email string is entered.
+                if (!(email.text.toString().isValidEmail())){
+                    email.error = "Invalid email"
                     return false
                 }
 
