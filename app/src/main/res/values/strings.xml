@@ -9,4 +9,7 @@
     <string name="call_action_text">Call</string>
     <string name="message_action_text">Message</string>
     <string name="email_action_text">Email</string>
+    <string name="add_fragment_action_bar_title">%s contact</string>
+    <string name="save_to_action_text">Save%s to</string>
+    <string name="request_permission_text">Request permission</string>
 </resources>

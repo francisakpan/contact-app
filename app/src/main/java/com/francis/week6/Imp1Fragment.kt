@@ -18,6 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
  */
 class Imp1Fragment : Fragment(), ContactAdapter.OnItemClickListener {
 
+    //Initialize recycler view adapter.
     private val contactAdapter = ContactAdapter(this)
 
     override fun onCreateView(
@@ -31,25 +32,32 @@ class Imp1Fragment : Fragment(), ContactAdapter.OnItemClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //On view created fetch contact from firebase database
         ContactStore.fetchContacts()
 
+        //Set childEventListener for realtime updates
         ContactStore.getRealtimeUpdates()
 
+        //Initialize recycler view and set layout manager and adapter.
         view.findViewById<RecyclerView>(R.id.home_screen_recyclerView).apply {
             layoutManager = LinearLayoutManager(view.context, LinearLayoutManager.VERTICAL, false)
             adapter = contactAdapter
         }
 
+        //Observe for events from liveData and populate recycler view accordingly.
         ContactStore.contacts.observe(viewLifecycleOwner, { contact ->
             contactAdapter.populateView(contact)
         })
 
+        //Observe for updated events on liveData and add changes to recycler view contact item
         ContactStore.contact.observe(viewLifecycleOwner, {contact ->
             contactAdapter.addContact(contact)
         })
 
+        //Initialize Floating action button and set Onclick Listener.
         view.findViewById<FloatingActionButton>(R.id.add_button).apply {
             setOnClickListener {
+                //Get fragment navigation action and navigate to next fragment.
                 val action = Imp1FragmentDirections
                     .actionHomeScreenFragmentToAddContactFragment(editContactData = null)
                 view.findNavController().navigate(action)
@@ -57,7 +65,11 @@ class Imp1Fragment : Fragment(), ContactAdapter.OnItemClickListener {
         }
     }
 
+    /**
+     * Implement the contactClicked listener for recyclerview item click
+     */
     override fun contactClicked(view: View, contact: Contact) {
+        //Get fragment navigation action and navigate to next framgent.
         val action = Imp1FragmentDirections
             .actionHomeScreenFragmentToContactDetailsFragment(contact)
         view.findNavController().navigate(action)

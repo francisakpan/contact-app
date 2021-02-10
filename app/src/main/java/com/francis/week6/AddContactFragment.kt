@@ -2,26 +2,20 @@ package com.francis.week6
 
 import android.graphics.Color
 import android.os.Bundle
-import android.provider.ContactsContract
-import android.text.Editable
 import android.view.*
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.francis.week6.models.Contact
 import com.francis.week6.models.ContactStore
 import com.google.android.material.textfield.TextInputEditText
-import org.w3c.dom.Text
 import kotlin.random.Random
 
 /**
  * A simple [Fragment] subclass.
- * create an instance of this fragment.
  */
 class AddContactFragment : Fragment() {
     private lateinit var action: String
@@ -32,9 +26,16 @@ class AddContactFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        /*
+         * Get arguments passed from navigation component
+         */
         arguments?.let { argument ->
             val bundle = AddContactFragmentArgs.fromBundle(argument)
-            action = bundle.action
+            action = bundle.action //Action is either Add or Edit
+
+            //Get contact from bundle.
+            //If contact is null set contact to a dummy contact with empty values.
             contact =
                 bundle.editContactData ?: Contact(null, false, "", "", "")
         }
@@ -43,7 +44,7 @@ class AddContactFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                view?.findNavController()?.popBackStack()
+                view?.findNavController()?.popBackStack() //Navigate back
             }
 
             R.id.action_save -> {
@@ -53,7 +54,7 @@ class AddContactFragment : Fragment() {
                     email = email.text.toString()
                 )
 
-                if (action == "Add") {
+                if (action == "Add") { //If add generate random color value and assign to contact color.
                     contact.color = Color.argb(
                         255,
                         Random.nextInt(256),
@@ -63,13 +64,25 @@ class AddContactFragment : Fragment() {
                 }
 
                 if (action == "Add") {
-                    ContactStore.addContact(contact)
+                    ContactStore.addContact(contact) //Add a contact entry to firebase database.
                 }else {
                     contact.id = this.contact.id
-                    ContactStore.updateContact(contact)
+                    contact.color = this.contact.color
+                    ContactStore.updateContact(contact) //Update a contact given id on the firebase.
                 }
 
-                view?.findNavController()?.popBackStack()
+                /*
+                    Use ContactStore livedata from add method to observe if adding to database is
+                    successful of not. If successful close the fragment, else show a toast with error
+                    message.
+                 */
+                ContactStore.result.observe(viewLifecycleOwner,  {
+                    if (it == null) {
+                        view?.findNavController()?.popBackStack()
+                    }else{
+                        Toast.makeText(requireContext(), "Error Saving contact", Toast.LENGTH_LONG).show()
+                    }
+                })
             }
         }
         return super.onOptionsItemSelected(item)
@@ -77,6 +90,8 @@ class AddContactFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.contact_menu, menu)
+
+        //Add fragment should not have delete and share menu items.
         menu.findItem(R.id.action_delete).isVisible = false
         menu.findItem(R.id.action_share).isVisible = false
         super.onCreateOptionsMenu(menu, inflater)
@@ -88,13 +103,6 @@ class AddContactFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         setHasOptionsMenu(true)
-        ContactStore.result.observe(viewLifecycleOwner, Observer {
-            val message = if (it == null) {
-                "Successful"
-            }else {
-                "Error: " + it.message
-            }
-        })
         return inflater.inflate(R.layout.fragment_add_contact, container, false)
     }
 
@@ -105,30 +113,35 @@ class AddContactFragment : Fragment() {
         val context = (activity as AppCompatActivity?)!!
         context.setSupportActionBar(toolbar)
 
+        //Set actionbar title
         if (action == "Add") {
-            context.supportActionBar?.title = "Create contact"
+            context.supportActionBar?.title = String.format(getString(R.string.add_fragment_action_bar_title), "Create")
         } else {
-            context.supportActionBar?.title = "Edit contact"
+            context.supportActionBar?.title = String.format(getString(R.string.add_fragment_action_bar_title), "Edit")
         }
 
+        //Save "save to" text view
         view.findViewById<TextView>(R.id.save_text_view).apply {
             text = if (action == "Add"){
-                "Save to "
+                String.format(getString(R.string.save_to_action_text), "")
             }else {
-                "Saved to "
+                String.format(getString(R.string.save_to_action_text), "d")
             }
         }
 
+        //Initialize full name text field
         view.findViewById<TextInputEditText>(R.id.name_edit_text).also {
             it.setText(contact.fullName)
             name = it
         }
 
+        //Initialize phone text field
         view.findViewById<TextInputEditText>(R.id.phone_edit_text).also {
             it.setText(contact.phone)
             phone = it
         }
 
+        //Initialize email text field
         view.findViewById<TextInputEditText>(R.id.email_edit_text).also {
             it.setText(contact.email)
             email = it

@@ -10,8 +10,6 @@ import androidx.navigation.findNavController
 
 /**
  * A simple [Fragment] subclass.
- * Use the [AppFragment.newInstance] factory method to
- * create an instance of this fragment.
  */
 class AppFragment : Fragment() {
 
@@ -26,15 +24,23 @@ class AppFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        /*
+            Initialize implementation 1 button and assign onClick Listener.
+         */
         view.findViewById<Button>(R.id.imp_1).apply {
             setOnClickListener {
+                // Get navigation component navigation action and navigate to new fragment
                 val action = AppFragmentDirections.actionAppFragmentToHomeScreenFragment()
                 view.findNavController().navigate(action)
             }
         }
 
+        /*
+            Initialize implementation 2 button and assign onClick Listener.
+         */
         view.findViewById<Button>(R.id.imp_2).apply {
             setOnClickListener {
+                // Get navigation component navigation action and navigate to new fragment
                 val action = AppFragmentDirections.actionAppFragmentToImp2Fragment()
                 view.findNavController().navigate(action)
             }

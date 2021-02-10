@@ -12,18 +12,22 @@ class Imp2Adapter(private val contacts: ArrayList<Contact>): RecyclerView.Adapte
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         fun bind(contact: Contact){
+            //Initialize circular card view and set the color
             itemView.findViewById<CardView>(R.id.cardView).apply {
                 setCardBackgroundColor(contact.color)
             }
 
+            //Initialize initials textview and set text
             itemView.findViewById<TextView>(R.id.initials_text_view).also {
                 it.text = contact.fullName?.first()?.toUpperCase().toString()
             }
 
+            //Initialize full name text view and set text
             itemView.findViewById<TextView>(R.id.imp2_name_text_view).also {
                 it.text = contact.fullName
             }
 
+            //Initialize phone text view and set text.
             itemView.findViewById<TextView>(R.id.imp2_phone_text_view).also {
                 it.text = contact.phone
             }

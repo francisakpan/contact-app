@@ -7,11 +7,14 @@ import android.os.Parcelable
 import androidx.annotation.RequiresApi
 import com.google.firebase.database.Exclude
 
+/**
+ * Models Each contact object.
+ */
 data class Contact(
-    @get: Exclude
+    @get: Exclude //Exclude database from saving id field
     var id: String? = null,
 
-    @get: Exclude
+    @get: Exclude //Exclude database from saving isDeleted field
     var isDeleted: Boolean? = false,
 
     var fullName: String? = null,
