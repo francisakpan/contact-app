@@ -71,7 +71,8 @@ class AddContactFragment : Fragment() {
                 }
 
                 //Check if a valid email string is entered.
-                if (!(email.text.toString().isValidEmail())){
+                if (!(email.text.toString().isValidEmail()) &&
+                        email.text?.isBlank() != true){
                     email.error = "Invalid email"
                     return false
                 }
