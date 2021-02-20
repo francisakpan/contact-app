@@ -1,5 +1,6 @@
 package com.francis.week6.models
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +11,8 @@ object ContactStore : ViewModel() {
      * Get a reference to the database with path contacts.
      */
     private val dbContact = FirebaseDatabase.getInstance().getReference("contacts")
+
+//    private val
 
     /**
      * immutable list of liveData contacts queried from firebase
@@ -113,7 +116,9 @@ object ContactStore : ViewModel() {
      */
     fun fetchContacts() {
         dbContact.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(error: DatabaseError) {}
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("Network Call", "${error.code}")
+            }
 
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {

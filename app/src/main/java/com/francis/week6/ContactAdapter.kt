@@ -14,6 +14,8 @@ class ContactAdapter(
 
     private var contacts = mutableListOf<Contact>()
 
+    val size = contacts.size
+
     interface OnItemClickListener {
         fun contactClicked(view: View, contact: Contact)
     }
