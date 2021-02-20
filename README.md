@@ -16,7 +16,5 @@ Expectation:
 - There should be a button to ask again if permission is denied
 
 ### Screenshots
-<img alt="portrait mode" src="https://res.cloudinary.com/dclwbiwmf/image/upload/v1613826570/Screenshot_2021-02-20-12-57-11-768_com.francis.week6_utn9tk.jpg" width="200" height="380"> 
-<img alt="portrait mode" src="https://res.cloudinary.com/dclwbiwmf/image/upload/v1613827335/Screenshot_2021-02-20-12-57-30-515_com.francis.week6_moj2f0.jpg" width="200" height="380">  
-<img alt="portrait mode" src="https://res.cloudinary.com/dclwbiwmf/image/upload/v1613827278/IMG_20210220_142026_vkcxwe.jpg" width="200" height="380"> 
-<img alt="portrait mode" src="https://res.cloudinary.com/dclwbiwmf/image/upload/v1613826570/Screenshot_2021-02-20-12-57-22-246_com.francis.week6_ngaizw.jpg" width="200" height="380">
+<img alt="portrait mode" src="https://res.cloudinary.com/dclwbiwmf/image/upload/v1613826570/Screenshot_2021-02-20-12-57-11-768_com.francis.week6_utn9tk.jpg" width="200" height="380">  <img alt="portrait mode" src="https://res.cloudinary.com/dclwbiwmf/image/upload/v1613827335/Screenshot_2021-02-20-12-57-30-515_com.francis.week6_moj2f0.jpg" width="200" height="380">  
+<img alt="portrait mode" src="https://res.cloudinary.com/dclwbiwmf/image/upload/v1613827278/IMG_20210220_142026_vkcxwe.jpg" width="200" height="380">  <img alt="portrait mode" src="https://res.cloudinary.com/dclwbiwmf/image/upload/v1613826570/Screenshot_2021-02-20-12-57-22-246_com.francis.week6_ngaizw.jpg" width="200" height="380">
