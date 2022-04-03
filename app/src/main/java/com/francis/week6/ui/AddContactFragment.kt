@@ -1,17 +1,23 @@
-package com.francis.week6
+package com.francis.week6.ui
 
 import android.graphics.Color
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import com.francis.week6.Validator.Companion.isValidEmail
+import androidx.navigation.fragment.findNavController
+import com.francis.week6.R
 import com.francis.week6.models.Contact
 import com.francis.week6.models.ContactStore
+import com.francis.week6.utils.Validator
+import com.francis.week6.utils.Validator.Companion.isValidEmail
 import com.google.android.material.textfield.TextInputEditText
 import kotlin.random.Random
 
@@ -33,16 +39,16 @@ class AddContactFragment : Fragment() {
          */
         arguments?.let { argument ->
             val bundle = AddContactFragmentArgs.fromBundle(argument)
-            action = bundle.action //Action is either Add or Edit
+            action = bundle.screen //Action is either Add or Edit
 
             //Get contact from bundle.
             //If contact is null set contact to a dummy contact with empty values.
             contact =
-                bundle.editContactData ?: Contact(null, false, "", "", "")
+                bundle.contact ?: Contact(null, false, "", "", "")
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    private fun setMenuItemClickListener(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
                 view?.findNavController()?.popBackStack() //Navigate back
@@ -90,25 +96,32 @@ class AddContactFragment : Fragment() {
                     successful of not. If successful close the fragment, else show a toast with error
                     message.
                  */
-                ContactStore.result.observe(viewLifecycleOwner,  {
+                ContactStore.result.observe(viewLifecycleOwner) {
                     if (it == null) {
                         view?.findNavController()?.popBackStack()
-                    }else{
-                        Toast.makeText(requireContext(), "Error Saving contact", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(requireContext(), "Error Saving contact", Toast.LENGTH_LONG)
+                            .show()
                     }
-                })
+                }
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.contact_menu, menu)
-
-        //Add fragment should not have delete and share menu items.
-        menu.findItem(R.id.action_delete).isVisible = false
-        menu.findItem(R.id.action_share).isVisible = false
-        super.onCreateOptionsMenu(menu, inflater)
+    private fun setupToolsBar(view: View) {
+        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
+        val toolbar = view.findViewById<Toolbar>(R.id.add_screen_tools_bar)
+        toolbar.title = getString(R.string.add_fragment_action_bar_title, action)
+        toolbar.inflateMenu(R.menu.contact_menu)
+        toolbar.menu.findItem(R.id.action_delete).isVisible = false
+        toolbar.menu.findItem(R.id.action_share).isVisible = false
+        toolbar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+        toolbar.setOnMenuItemClickListener {
+            setMenuItemClickListener(it)
+        }
     }
 
     override fun onCreateView(
@@ -116,23 +129,13 @@ class AddContactFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_add_contact, container, false)
+        val view = inflater.inflate(R.layout.fragment_add_contact, container, false)
+        setupToolsBar(view)
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val toolbar: Toolbar = view.findViewById(R.id.add_screen_tools_bar)
-        val context = (activity as AppCompatActivity?)!!
-        context.setSupportActionBar(toolbar)
-
-        //Set actionbar title
-        if (action == "Add") {
-            context.supportActionBar?.title = String.format(getString(R.string.add_fragment_action_bar_title), "Create")
-        } else {
-            context.supportActionBar?.title = String.format(getString(R.string.add_fragment_action_bar_title), "Edit")
-        }
 
         //Save "save to" text view
         view.findViewById<TextView>(R.id.save_text_view).apply {

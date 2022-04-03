@@ -1,4 +1,4 @@
-package com.francis.week6
+package com.francis.week6.utils
 
 import android.util.Patterns
 import android.view.View

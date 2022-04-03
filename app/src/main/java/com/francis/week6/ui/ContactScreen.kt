@@ -1,17 +1,18 @@
-package com.francis.week6
+package com.francis.week6.ui
 
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.francis.week6.R
+import com.francis.week6.adapter.ContactAdapter
 import com.francis.week6.models.Contact
 import com.francis.week6.models.ContactStore
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -20,12 +21,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
  * A simple [Fragment] subclass.
  * create an instance of this fragment.
  */
-class Imp1Fragment : Fragment(), ContactAdapter.OnItemClickListener {
-
+class ContactScreen : Fragment(), ContactAdapter.OnItemClickListener {
 
     //Initialize recycler view adapter.
     private val contactAdapter = ContactAdapter(this)
-    private val TAG = Imp1Fragment::class.java.simpleName
 
     private var loading = false
     private lateinit var loadingImage: ImageView
@@ -53,12 +52,17 @@ class Imp1Fragment : Fragment(), ContactAdapter.OnItemClickListener {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        Log.d(TAG, "onCreateView")
+        Log.d(javaClass.name, "onCreateView")
         return inflater.inflate(R.layout.fragment_imp1, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (requireActivity() as AppCompatActivity).supportActionBar?.apply {
+            title = "Contacts"
+            show()
+        }
 
         //On view created fetch contact from firebase database
         ContactStore.fetchContacts()
@@ -66,7 +70,7 @@ class Imp1Fragment : Fragment(), ContactAdapter.OnItemClickListener {
         //Set childEventListener for realtime updates
         ContactStore.getRealtimeUpdates()
 
-        loadingImage = view.findViewById<ImageView>(R.id.loading_indicator)
+        loadingImage = view.findViewById(R.id.loading_indicator)
 
         //Initialize recycler view and set layout manager and adapter.
         view.findViewById<RecyclerView>(R.id.home_screen_recyclerView).apply {
@@ -79,24 +83,25 @@ class Imp1Fragment : Fragment(), ContactAdapter.OnItemClickListener {
         if (loading) showLoading()
 
         //Observe for events from liveData and populate recycler view accordingly.
-        ContactStore.contacts.observe(viewLifecycleOwner, { contact ->
+        ContactStore.contacts.observe(viewLifecycleOwner) { contact ->
             contactAdapter.populateView(contact)
             if (loading) { //hide loading indicator on data received.
                 hideLoading()
             }
-        })
+        }
 
         //Observe for updated events on liveData and add changes to recycler view contact item
-        ContactStore.contact.observe(viewLifecycleOwner, { contact ->
-            contactAdapter.addContact(contact)
-        })
+        ContactStore.contact.observe(viewLifecycleOwner) { contact ->
+            if (contact != null) {
+                contactAdapter.addContact(contact)
+            }
+        }
 
         //Initialize Floating action button and set Onclick Listener.
         view.findViewById<FloatingActionButton>(R.id.add_button).apply {
             setOnClickListener {
                 //Get fragment navigation action and navigate to next fragment.
-                val action = Imp1FragmentDirections
-                    .actionHomeScreenFragmentToAddContactFragment(editContactData = null)
+                val action = ContactScreenDirections.actionHomeScreenFragmentToAddContactFragment2()
                 view.findNavController().navigate(action)
             }
         }
@@ -107,7 +112,7 @@ class Imp1Fragment : Fragment(), ContactAdapter.OnItemClickListener {
      */
     override fun contactClicked(view: View, contact: Contact) {
         //Get fragment navigation action and navigate to next fragment.
-        val action = Imp1FragmentDirections
+        val action = ContactScreenDirections
             .actionHomeScreenFragmentToContactDetailsFragment(contact)
         view.findNavController().navigate(action)
     }

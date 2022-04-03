@@ -1,6 +1,7 @@
 package com.francis.week6
 
 import com.francis.week6.models.Contact
+import com.francis.week6.utils.Validator
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

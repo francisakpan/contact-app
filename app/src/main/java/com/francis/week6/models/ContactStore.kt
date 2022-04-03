@@ -1,10 +1,17 @@
 package com.francis.week6.models
 
+import android.content.Context
+import android.graphics.Color
+import android.provider.ContactsContract
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 object ContactStore : ViewModel() {
     /**
@@ -28,12 +35,12 @@ object ContactStore : ViewModel() {
     /**
      * Immutable list of liveData contact object from firebase.
      */
-    private val _contact = MutableLiveData<Contact>()
+    private val _contact = MutableLiveData<Contact?>()
 
     /**
      * mutable list of liveData contacts cbjects from firebase.
      */
-    val contact: LiveData<Contact>
+    val contact: LiveData<Contact?>
         get() = _contact
 
     /**
@@ -46,6 +53,11 @@ object ContactStore : ViewModel() {
      */
     val result: LiveData<Exception?>
         get() = _result
+
+    private var _phoneContacts = MutableLiveData<List<Contact>>(listOf())
+    val phoneContacts: MutableLiveData<List<Contact>>
+        get() = _phoneContacts
+
 
     /**
      * Create an instance variable of ChildEventListener
@@ -117,6 +129,7 @@ object ContactStore : ViewModel() {
     fun fetchContacts() {
         dbContact.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
+                _contacts.value = mutableListOf()
                 Log.d("Network Call", "${error.code}")
             }
 
@@ -170,6 +183,40 @@ object ContactStore : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         dbContact.removeEventListener(childEventListener)
+    }
+
+    /**
+     * Getting data from phone contacts
+     */
+    fun getPhoneContacts(context: Context) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val contactList = arrayListOf<Contact>() //declare array list to store phone contact.
+            val resolver =
+                context.contentResolver // declare a content resolver to query phone contact
+            val contacts = resolver.query( //Query phone contacts and store in contacts variable
+                ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null
+            )
+            if (contacts != null) { //Check to see if contact is null else loop to get relevant data.
+                while (contacts.moveToNext()) {
+                    val name =
+                        contacts.getString(contacts.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
+                    val number =
+                        contacts.getString(contacts.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                    val obj = Contact()
+                    obj.fullName = name
+                    obj.phone = number
+                    obj.color = Color.argb(
+                        255,
+                        Random.nextInt(256),
+                        Random.nextInt(256),
+                        Random.nextInt(256)
+                    )
+                    contactList.add(obj)
+                }
+            }
+            contacts?.close()
+            _phoneContacts.postValue(contactList)
+        }
     }
 
 }

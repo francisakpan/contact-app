@@ -4,26 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Imp2Fragment">
+    tools:context=".ui.PhoneContactsScreen">
 
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/imp2_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/imp2_toolsBar"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/imp2_recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible"
-            tools:listitem="@layout/contact_item" />
-
-    </LinearLayout>
+        android:visibility="invisible"
+        tools:listitem="@layout/contact_item" />
 
     <Button
         android:id="@+id/btn_request_permission"
@@ -31,6 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:visibility="gone"
         android:text="@string/request_permission_text"
         android:textAllCaps="false" />
 

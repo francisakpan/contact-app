@@ -1,10 +1,10 @@
-package com.francis.week6
+package com.francis.week6.adapter
 
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.francis.week6.R
 import com.francis.week6.models.inflate
 
 class PhoneDetailsAdapter(private val details: ArrayList<String>): RecyclerView.Adapter<PhoneDetailsAdapter.ViewHolder>() {

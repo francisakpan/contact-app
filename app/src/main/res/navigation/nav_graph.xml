@@ -3,61 +3,58 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/appFragment">
+    app:startDestination="@id/homeScreenFragment">
 
     <fragment
         android:id="@+id/homeScreenFragment"
-        android:name="com.francis.week6.Imp1Fragment"
+        android:name="com.francis.week6.ui.ContactScreen"
         android:label="fragment_home_screen"
         tools:layout="@layout/fragment_imp1" >
         <action
+            android:id="@+id/action_homeScreenFragment_to_addContactFragment2"
+            app:destination="@id/addContactFragment" />
+        <action
             android:id="@+id/action_homeScreenFragment_to_contactDetailsFragment"
             app:destination="@id/contactDetailsFragment" />
-        <action
-            android:id="@+id/action_homeScreenFragment_to_addContactFragment"
-            app:destination="@id/addContactFragment" />
     </fragment>
     <fragment
         android:id="@+id/contactDetailsFragment"
-        android:name="com.francis.week6.ContactDetailsFragment"
+        android:name="com.francis.week6.ui.ContactDetailsFragment"
         android:label="fragment_contact_details"
         tools:layout="@layout/fragment_contact_details" >
         <action
             android:id="@+id/action_contactDetailsFragment_to_addContactFragment"
             app:destination="@id/addContactFragment" />
         <argument
-            android:name="contact_data"
+            android:name="contact"
             app:argType="com.francis.week6.models.Contact" />
+        <argument
+            android:name="screen"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
     <fragment
         android:id="@+id/addContactFragment"
-        android:name="com.francis.week6.AddContactFragment"
+        android:name="com.francis.week6.ui.AddContactFragment"
         android:label="fragment_add_contact"
         tools:layout="@layout/fragment_add_contact" >
         <argument
-            android:name="action"
+            android:name="screen"
             app:argType="string"
             android:defaultValue="Add" />
         <argument
-            android:name="edit_contact_data"
+            android:name="contact"
             app:argType="com.francis.week6.models.Contact"
-            app:nullable="true" />
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
-        android:id="@+id/appFragment"
-        android:name="com.francis.week6.AppFragment"
-        android:label="fragment_app"
-        tools:layout="@layout/fragment_app" >
+        android:id="@+id/phone_contact_screen"
+        android:name="com.francis.week6.ui.PhoneContactsScreen"
+        android:label="Phone Contacts"
+        tools:layout="@layout/fragment_imp2" >
         <action
-            android:id="@+id/action_appFragment_to_homeScreenFragment"
-            app:destination="@id/homeScreenFragment" />
-        <action
-            android:id="@+id/action_appFragment_to_imp2Fragment"
-            app:destination="@id/imp2Fragment" />
+            android:id="@+id/action_phone_contact_screen_to_contactDetailsFragment"
+            app:destination="@id/contactDetailsFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/imp2Fragment"
-        android:name="com.francis.week6.Imp2Fragment"
-        android:label="fragment_imp2"
-        tools:layout="@layout/fragment_imp2" />
 </navigation>
